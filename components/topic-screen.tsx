@@ -12,6 +12,7 @@ import {
   X,
 } from "lucide-react"
 import type { Question, Subject, Topic } from "@/lib/curriculum"
+import { buildTopicQuiz } from "@/lib/quiz"
 import { subjectStyles } from "@/lib/subject-style"
 import { SubjectIcon } from "@/components/subject-icon"
 import type { useProgress } from "@/hooks/use-progress"
@@ -39,13 +40,14 @@ export function TopicScreen({
 }: TopicScreenProps) {
   const style = subjectStyles[subject.color]
   const [phase, setPhase] = useState<Phase>("lesson")
+  const [quizQuestions, setQuizQuestions] = useState<Question[]>(topic.questions)
   const [index, setIndex] = useState(0)
   const [score, setScore] = useState(0)
   const [answered, setAnswered] = useState(false)
   const [wasCorrect, setWasCorrect] = useState(false)
 
-  const total = topic.questions.length
-  const question = topic.questions[index]
+  const total = quizQuestions.length
+  const question = quizQuestions[index]
 
   useEffect(() => {
     // Scroll to top when the topic changes.
@@ -53,6 +55,7 @@ export function TopicScreen({
   }, [])
 
   function startQuiz() {
+    setQuizQuestions(buildTopicQuiz(gradeId, subject.id, topic.id, topic.questions))
     progress.markInProgress(gradeId, subject.id, topic.id)
     setPhase("quiz")
     setIndex(0)

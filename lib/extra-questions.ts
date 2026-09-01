@@ -1,4 +1,5 @@
 import type { Question } from "./curriculum"
+import { grade3MathExtraQuestions } from "./grade3_math_extra_questions"
 
 // Additional questions merged with each topic's base questions to create a
 // larger pool. Quizzes then draw a random subset, so attempts vary.
@@ -1082,4 +1083,13 @@ export const extraQuestions: Record<string, Question[]> = {
       explanation: "0° longitude is the Prime Meridian.",
     },
   ],
+  ...grade3MathExtraQuestions,
+}
+
+export function getExtraQuestions(
+  gradeId: string,
+  subjectId: string,
+  topicId: string,
+): Question[] {
+  return extraQuestions[`${gradeId}:${subjectId}:${topicId}`] ?? []
 }

@@ -1,4 +1,5 @@
 import type { Question } from "./curriculum"
+import { getExtraQuestions } from "./extra-questions"
 
 // ----------------------------------------------------------------------------
 // Randomization helpers used by quizzes and the daily challenge.
@@ -31,6 +32,30 @@ export function randomizeQuestion(q: Question, rng: () => number = Math.random):
   }
 }
 
+// Ensure IDs are unique within one generated quiz.
+// Keeps original id when possible; otherwise appends/increments __N.
+function ensureUniqueQuestionIds(questions: readonly Question[]): Question[] {
+  const used = new Set<string>()
+  const counts = new Map<string, number>()
+
+  return questions.map((q) => {
+    const base = q.id
+    let n = (counts.get(base) ?? 0) + 1
+    counts.set(base, n)
+
+    let candidate = n === 1 ? base : `${base}__${n}`
+    while (used.has(candidate)) {
+      n += 1
+      counts.set(base, n)
+      candidate = `${base}__${n}`
+    }
+
+    used.add(candidate)
+    if (candidate === q.id) return q
+    return { ...q, id: candidate }
+  })
+}
+
 // Build a quiz by shuffling a pool, taking `size` questions, and shuffling
 // the options within each one.
 export function buildQuiz(
@@ -38,9 +63,11 @@ export function buildQuiz(
   size: number,
   rng: () => number = Math.random,
 ): Question[] {
-  return shuffle(pool, rng)
+  const selected = shuffle(pool, rng)
     .slice(0, size)
     .map((q) => randomizeQuestion(q, rng))
+
+  return ensureUniqueQuestionIds(selected)
 }
 
 // Small, fast seeded RNG (mulberry32) so the daily challenge is the same for
@@ -65,4 +92,16 @@ export function todayKey(date = new Date()): string {
 
 export function dailySeed(date = new Date()): number {
   return date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate()
+}
+
+export function buildTopicQuiz(
+  gradeId: string,
+  subjectId: string,
+  topicId: string,
+  baseQuestions: readonly Question[],
+  size = 10,
+  rng: () => number = Math.random,
+): Question[] {
+  const pool = [...baseQuestions, ...getExtraQuestions(gradeId, subjectId, topicId)]
+  return buildQuiz(pool, Math.min(size, pool.length), rng)
 }
