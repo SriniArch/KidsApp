@@ -6,10 +6,11 @@ import { useProgress } from "@/hooks/use-progress"
 import { HomeScreen } from "@/components/home-screen"
 import { SubjectScreen } from "@/components/subject-screen"
 import { TopicScreen } from "@/components/topic-screen"
+import { DailyChallengeScreen } from "@/components/daily-challenge-screen"
 import { AppHeader } from "@/components/app-header"
 import { BuddyAccountDialog } from "@/components/buddy-account"
 
-type View = "home" | "subject" | "topic"
+type View = "home" | "subject" | "topic" | "daily"
 
 export function LearningApp() {
   const progress = useProgress()
@@ -37,6 +38,12 @@ export function LearningApp() {
     setView("home")
     setSubjectId(null)
     setTopicId(null)
+  }
+
+  function openDaily() {
+    setSubjectId(null)
+    setTopicId(null)
+    setView("daily")
   }
 
   function goToSubject() {
@@ -85,6 +92,7 @@ export function LearningApp() {
             gradeId={gradeId}
             onSelectGrade={setGradeId}
             onSelectSubject={openSubject}
+            onSelectDaily={openDaily}
             progress={progress}
           />
         )}
@@ -94,6 +102,15 @@ export function LearningApp() {
             gradeId={gradeId}
             subject={subject}
             onSelectTopic={openTopic}
+            onBack={goHome}
+            progress={progress}
+          />
+        )}
+
+        {view === "daily" && (
+          <DailyChallengeScreen
+            key={gradeId}
+            gradeId={gradeId}
             onBack={goHome}
             progress={progress}
           />

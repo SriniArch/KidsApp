@@ -14,6 +14,7 @@ When you ship something, move it from Pending or Desired to Implemented. Keep th
 - [x] Progress in localStorage (`hooks/use-progress.ts`): status and best score; completed is never downgraded
 - [x] Multi-device progress via a buddy code (no email/password): create or enter a code in the header; `/api/progress` stores and merges scores
 - [x] Kid-oriented UI: fonts, subject colors/icons
+- [x] Daily challenge UI: seeded 10-question mix per grade (`buildDailyQuiz` in `lib/quiz.ts`), home card, play/retry, best score stored with buddy progress
 
 ### Content
 
@@ -34,8 +35,6 @@ Each topic has a short lesson and five base questions in `lib/curriculum.ts`.
 ## Pending
 
 Started in code or implied by the current architecture, not finished. -
-
-- [ ] Daily challenge UI (`seededRng`, `todayKey`, `dailySeed` exist in `lib/quiz.ts` but nothing uses them)
 
 ## Desired
 

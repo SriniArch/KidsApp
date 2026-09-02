@@ -4,7 +4,7 @@ import { ChevronRight, GraduationCap, Home, KeyRound } from "lucide-react"
 import { getGrade } from "@/lib/curriculum"
 
 interface AppHeaderProps {
-  view: "home" | "subject" | "topic"
+  view: "home" | "subject" | "topic" | "daily"
   gradeId: string
   subjectTitle?: string
   topicTitle?: string
@@ -85,6 +85,15 @@ export function AppHeader({
               >
                 {subjectTitle}
               </button>
+            </>
+          )}
+
+          {view === "daily" && (
+            <>
+              <ChevronRight className="size-4 opacity-50" aria-hidden="true" />
+              <span className="max-w-[10rem] truncate px-2 py-1 text-foreground" aria-current="page">
+                Daily challenge
+              </span>
             </>
           )}
 

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import { displayBuddyCode, isBuddyCode, normalizeBuddyCode } from "@/lib/buddy-code"
+import { dailyProgressKey } from "@/lib/quiz"
 import {
   mergeProgress,
   progressEqual,
@@ -205,6 +206,38 @@ export function useProgress() {
     [progress, persist],
   )
 
+  const getDailyRecord = useCallback(
+    (gradeId: string): ProgressRecord | undefined => {
+      return progress[dailyProgressKey(gradeId)]
+    },
+    [progress],
+  )
+
+  const markDailyInProgress = useCallback(
+    (gradeId: string) => {
+      const k = dailyProgressKey(gradeId)
+      if (progress[k]?.status === "completed") return
+      persist({ ...progress, [k]: { ...progress[k], status: "in-progress" } })
+    },
+    [progress, persist],
+  )
+
+  const markDailyCompleted = useCallback(
+    (gradeId: string, score: number, total: number) => {
+      const k = dailyProgressKey(gradeId)
+      const prevBest = progress[k]?.bestScore ?? 0
+      persist({
+        ...progress,
+        [k]: {
+          status: "completed",
+          bestScore: Math.max(prevBest, score),
+          total,
+        },
+      })
+    },
+    [progress, persist],
+  )
+
   const countCompleted = useCallback(
     (gradeId: string, subjectId: string, topicIds: string[]): number => {
       return topicIds.filter(
@@ -290,8 +323,11 @@ export function useProgress() {
     displayName: account?.name ?? "",
     getStatus,
     getRecord,
+    getDailyRecord,
     markInProgress,
     markCompleted,
+    markDailyInProgress,
+    markDailyCompleted,
     countCompleted,
     createBuddyCode,
     joinBuddyCode,

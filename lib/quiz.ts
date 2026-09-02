@@ -1,4 +1,4 @@
-import type { Question } from "./curriculum"
+import { getGrade, type Question } from "./curriculum"
 import { getExtraQuestions } from "./extra-questions"
 
 // ----------------------------------------------------------------------------
@@ -92,6 +92,63 @@ export function todayKey(date = new Date()): string {
 
 export function dailySeed(date = new Date()): number {
   return date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate()
+}
+
+export function dailyProgressKey(gradeId: string, date = new Date()): string {
+  return `daily:${gradeId}:${todayKey(date)}`
+}
+
+function sourceQuestion(q: Question, subjectId: string, topicId: string): Question {
+  return { ...q, id: `${subjectId}-${topicId}-${q.id}` }
+}
+
+function saltFromString(value: string): number {
+  let h = 2166136261
+  for (let i = 0; i < value.length; i++) {
+    h ^= value.charCodeAt(i)
+    h = Math.imul(h, 16777619)
+  }
+  return h >>> 0
+}
+
+// Mix questions from every topic in the grade. Seeded so the same grade
+// sees the same 10 questions on a given local calendar day.
+export function buildDailyQuiz(gradeId: string, size = 10, date = new Date()): Question[] {
+  const grade = getGrade(gradeId)
+  if (!grade) return []
+
+  const rng = seededRng(dailySeed(date) ^ saltFromString(gradeId))
+  const topicPools: Question[][] = []
+
+  for (const subject of grade.subjects) {
+    for (const topic of subject.topics) {
+      const pool = [
+        ...topic.questions.map((q) => sourceQuestion(q, subject.id, topic.id)),
+        ...getExtraQuestions(gradeId, subject.id, topic.id).map((q) =>
+          sourceQuestion(q, subject.id, topic.id),
+        ),
+      ]
+      if (pool.length > 0) topicPools.push(shuffle(pool, rng))
+    }
+  }
+
+  const orderedPools = shuffle(topicPools, rng)
+  const selected: Question[] = []
+  let round = 0
+  while (selected.length < size) {
+    let added = false
+    for (const pool of orderedPools) {
+      const next = pool[round]
+      if (!next) continue
+      selected.push(next)
+      added = true
+      if (selected.length === size) break
+    }
+    if (!added) break
+    round += 1
+  }
+
+  return ensureUniqueQuestionIds(selected.map((q) => randomizeQuestion(q, rng)))
 }
 
 export function buildTopicQuiz(

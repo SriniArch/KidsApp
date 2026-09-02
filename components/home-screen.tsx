@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowRight, Sparkles } from "lucide-react"
+import { ArrowRight, Sparkles, Trophy } from "lucide-react"
 import { curriculum, getGrade } from "@/lib/curriculum"
 import { subjectStyles } from "@/lib/subject-style"
 import { SubjectIcon } from "@/components/subject-icon"
@@ -10,6 +10,7 @@ interface HomeScreenProps {
   gradeId: string
   onSelectGrade: (gradeId: string) => void
   onSelectSubject: (subjectId: string) => void
+  onSelectDaily: () => void
   progress: ReturnType<typeof useProgress>
 }
 
@@ -17,9 +18,11 @@ export function HomeScreen({
   gradeId,
   onSelectGrade,
   onSelectSubject,
+  onSelectDaily,
   progress,
 }: HomeScreenProps) {
   const grade = getGrade(gradeId)
+  const daily = progress.getDailyRecord(gradeId)
 
   return (
     <div className="pt-8 sm:pt-12">
@@ -62,6 +65,31 @@ export function HomeScreen({
             )
           })}
         </div>
+      </div>
+
+      <div className="mt-10">
+        <button
+          type="button"
+          onClick={onSelectDaily}
+          className="group relative mx-auto flex w-full max-w-2xl items-center gap-4 overflow-hidden rounded-3xl bg-primary p-5 text-left text-primary-foreground shadow-lg shadow-primary/25 transition-transform hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:p-6"
+        >
+          <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary-foreground/15">
+            <Trophy className="size-7" aria-hidden="true" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-display text-2xl font-extrabold">Daily challenge</span>
+            <span className="mt-1 block text-sm font-semibold text-primary-foreground/85">
+              {daily?.status === "completed" && daily.bestScore !== undefined && daily.total !== undefined
+                ? `Done today — best ${daily.bestScore}/${daily.total}`
+                : daily?.status === "in-progress"
+                  ? "You started today's mix. Finish it!"
+                  : "10 mixed questions. Same for everyone today."}
+            </span>
+          </span>
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary-foreground/15 transition-transform group-hover:translate-x-0.5">
+            <ArrowRight className="size-5" aria-hidden="true" />
+          </span>
+        </button>
       </div>
 
       {/* Subject cards */}
