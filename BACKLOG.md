@@ -39,7 +39,7 @@ Started in code or implied by the current architecture, not finished. -
 
 ## Desired
 
-Not started. Not a commitment.
+Not started. Not a commitment
 
 - [ ] More grades and subjects
 - [ ] Review quiz of questions the child missed
