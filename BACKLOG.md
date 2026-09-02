@@ -33,7 +33,7 @@ Each topic has a short lesson and five base questions in `lib/curriculum.ts`.
 
 ## Pending
 
-Started in code or implied by the current architecture, not finished.
+Started in code or implied by the current architecture, not finished. -
 
 - [ ] Daily challenge UI (`seededRng`, `todayKey`, `dailySeed` exist in `lib/quiz.ts` but nothing uses them)
 
