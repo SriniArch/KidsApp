@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronRight, GraduationCap, Home } from "lucide-react"
+import { ChevronRight, GraduationCap, Home, KeyRound } from "lucide-react"
 import { getGrade } from "@/lib/curriculum"
 
 interface AppHeaderProps {
@@ -8,6 +8,8 @@ interface AppHeaderProps {
   gradeId: string
   subjectTitle?: string
   topicTitle?: string
+  buddyLabel: string
+  onOpenAccount: () => void
   onHome: () => void
   onBackToSubject: () => void
 }
@@ -17,6 +19,8 @@ export function AppHeader({
   gradeId,
   subjectTitle,
   topicTitle,
+  buddyLabel,
+  onOpenAccount,
   onHome,
   onBackToSubject,
 }: AppHeaderProps) {
@@ -36,6 +40,23 @@ export function AppHeader({
           <span className="font-display text-lg font-extrabold tracking-tight text-foreground">
             Learn Buddy
           </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={onOpenAccount}
+          className="hidden items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm font-bold text-secondary-foreground transition-colors hover:bg-secondary/80 focus-visible:ring-2 focus-visible:ring-ring sm:inline-flex"
+        >
+          <KeyRound className="size-4" aria-hidden="true" />
+          {buddyLabel}
+        </button>
+        <button
+          type="button"
+          onClick={onOpenAccount}
+          className="inline-flex size-9 items-center justify-center rounded-full bg-secondary text-secondary-foreground focus-visible:ring-2 focus-visible:ring-ring sm:hidden"
+          aria-label={buddyLabel}
+        >
+          <KeyRound className="size-4" aria-hidden="true" />
         </button>
 
         {/* Breadcrumb */}

@@ -7,6 +7,7 @@ import { HomeScreen } from "@/components/home-screen"
 import { SubjectScreen } from "@/components/subject-screen"
 import { TopicScreen } from "@/components/topic-screen"
 import { AppHeader } from "@/components/app-header"
+import { BuddyAccountDialog } from "@/components/buddy-account"
 
 type View = "home" | "subject" | "topic"
 
@@ -17,6 +18,7 @@ export function LearningApp() {
   const [gradeId, setGradeId] = useState<string>(curriculum[0].id)
   const [subjectId, setSubjectId] = useState<string | null>(null)
   const [topicId, setTopicId] = useState<string | null>(null)
+  const [accountOpen, setAccountOpen] = useState(false)
 
   const subject = subjectId ? getSubject(gradeId, subjectId) : undefined
   const topic = subjectId && topicId ? getTopic(gradeId, subjectId, topicId) : undefined
@@ -65,8 +67,16 @@ export function LearningApp() {
         gradeId={gradeId}
         subjectTitle={subject?.title}
         topicTitle={topic?.title}
+        buddyLabel={progress.displayName || progress.displayBuddyCode || "Save progress"}
+        onOpenAccount={() => setAccountOpen(true)}
         onHome={goHome}
         onBackToSubject={goToSubject}
+      />
+
+      <BuddyAccountDialog
+        open={accountOpen}
+        onClose={() => setAccountOpen(false)}
+        progress={progress}
       />
 
       <main className="mx-auto w-full max-w-5xl px-4 pb-16 sm:px-6">

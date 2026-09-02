@@ -9,6 +9,9 @@ __v0_jsx-dev-runtime.ts
 # Environment variables
 .env*.local
 
+# Buddy-code progress store (local/dev)
+data/buddy-progress.json
+
 # Common ignores
 node_modules
 .next/
