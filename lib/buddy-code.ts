@@ -46,6 +46,15 @@ const ANIMALS = [
 const ANIMAL_SET = new Set<string>(ANIMALS)
 const CODE_PATTERN = /^[a-z]+-\d{3}$/
 
+export const RESERVED_BUDDY_ACCOUNTS = [
+  { code: "yazhini", name: "Yazhini" },
+  { code: "magi", name: "Magi" },
+] as const
+
+const RESERVED_CODES = new Set<string>(
+  RESERVED_BUDDY_ACCOUNTS.map((account) => account.code),
+)
+
 export function generateBuddyCode(): string {
   const animal = ANIMALS[Math.floor(Math.random() * ANIMALS.length)]
   const digits = String(100 + Math.floor(Math.random() * 900))
@@ -56,10 +65,13 @@ export function normalizeBuddyCode(raw: string): string {
   const compact = raw.trim().toLowerCase().replace(/[\s_]+/g, "-")
   const match = compact.match(/^([a-z]+)[-\s]?(\d{3})$/)
   if (match) return `${match[1]}-${match[2]}`
+  const lettersOnly = compact.replace(/-/g, "")
+  if (RESERVED_CODES.has(lettersOnly)) return lettersOnly
   return compact
 }
 
 export function isBuddyCode(value: string): boolean {
+  if (RESERVED_CODES.has(value)) return true
   return CODE_PATTERN.test(value) && ANIMAL_SET.has(value.split("-")[0] ?? "")
 }
 

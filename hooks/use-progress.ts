@@ -282,7 +282,7 @@ export function useProgress() {
     async (rawCode: string) => {
       const code = normalizeBuddyCode(rawCode)
       if (!isBuddyCode(code)) {
-        throw new Error("Use a code like PANDA-847.")
+        throw new Error("Try magi, yazhini, or a code like PANDA-847.")
       }
       setSyncing(true)
       setSyncError(null)

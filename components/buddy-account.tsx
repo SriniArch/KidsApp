@@ -181,12 +181,15 @@ export function BuddyAccountDialog({ open, onClose, progress }: BuddyAccountDial
               <label className="block text-sm font-bold text-foreground" htmlFor="buddy-code">
                 I already have a code
               </label>
+              <p className="text-sm text-muted-foreground">
+                Magi and Yazhini can type their name. Other codes look like PANDA-847.
+              </p>
               <input
                 id="buddy-code"
                 value={codeInput}
                 onChange={(event) => setCodeInput(event.target.value)}
-                placeholder="PANDA-847"
-                autoCapitalize="characters"
+                placeholder="magi"
+                autoCapitalize="none"
                 autoCorrect="off"
                 spellCheck={false}
                 className="w-full rounded-2xl border border-input bg-background px-4 py-3 font-display text-lg font-extrabold tracking-wide text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"

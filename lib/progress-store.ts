@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import path from "node:path"
-import { generateBuddyCode } from "@/lib/buddy-code"
+import { generateBuddyCode, RESERVED_BUDDY_ACCOUNTS } from "@/lib/buddy-code"
 import { mergeProgress, type ProgressMap } from "@/lib/progress-data"
 
 export interface BuddyAccount {
@@ -105,12 +105,38 @@ function withLock<T>(fn: () => Promise<T>): Promise<T> {
   return run
 }
 
-async function loadTable(): Promise<{ table: AccountTable; filePath: string; useKv: boolean }> {
-  if (kvConfigured()) {
-    return { table: await kvGetTable(), filePath: "", useKv: true }
+function seedReservedAccounts(table: AccountTable): boolean {
+  let changed = false
+  const now = new Date().toISOString()
+  for (const seed of RESERVED_BUDDY_ACCOUNTS) {
+    if (table[seed.code]) continue
+    table[seed.code] = {
+      code: seed.code,
+      name: seed.name,
+      progress: {},
+      updatedAt: now,
+    }
+    changed = true
   }
-  const { table, filePath } = await readFileTable()
-  return { table, filePath, useKv: false }
+  return changed
+}
+
+async function loadTable(): Promise<{ table: AccountTable; filePath: string; useKv: boolean }> {
+  let table: AccountTable
+  let filePath = ""
+  let useKv = false
+  if (kvConfigured()) {
+    table = await kvGetTable()
+    useKv = true
+  } else {
+    const loaded = await readFileTable()
+    table = loaded.table
+    filePath = loaded.filePath
+  }
+  if (seedReservedAccounts(table)) {
+    await persistTable(table, filePath, useKv)
+  }
+  return { table, filePath, useKv }
 }
 
 async function persistTable(table: AccountTable, filePath: string, useKv: boolean) {
