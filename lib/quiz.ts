@@ -98,6 +98,30 @@ export function dailyProgressKey(gradeId: string, date = new Date()): string {
   return `daily:${gradeId}:${todayKey(date)}`
 }
 
+const DAILY_KEY_PATTERN = /^daily:(.+):(\d{4}-\d{2}-\d{2})$/
+
+export function parseDailyProgressKey(
+  key: string,
+): { gradeId: string; date: string } | null {
+  const match = DAILY_KEY_PATTERN.exec(key)
+  if (!match) return null
+  const gradeId = match[1]
+  const date = match[2]
+  if (!gradeId || !isCalendarDate(date)) return null
+  return { gradeId, date }
+}
+
+function isCalendarDate(value: string): boolean {
+  const [year, month, day] = value.split("-").map(Number)
+  if (!year || !month || !day) return false
+  const dt = new Date(year, month - 1, day)
+  return (
+    dt.getFullYear() === year &&
+    dt.getMonth() === month - 1 &&
+    dt.getDate() === day
+  )
+}
+
 function sourceQuestion(q: Question, subjectId: string, topicId: string): Question {
   return { ...q, id: `${subjectId}-${topicId}-${q.id}` }
 }

@@ -1,6 +1,7 @@
 "use client"
 
-import { ChevronRight, GraduationCap, Home, KeyRound } from "lucide-react"
+import Link from "next/link"
+import { ChevronRight, GraduationCap, Home, KeyRound, Users } from "lucide-react"
 import { getGrade } from "@/lib/curriculum"
 
 interface AppHeaderProps {
@@ -58,6 +59,20 @@ export function AppHeader({
         >
           <KeyRound className="size-4" aria-hidden="true" />
         </button>
+        <Link
+          href="/family"
+          className="hidden items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-bold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring sm:inline-flex"
+        >
+          <Users className="size-4" aria-hidden="true" />
+          Family
+        </Link>
+        <Link
+          href="/family"
+          className="inline-flex size-9 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring sm:hidden"
+          aria-label="Family"
+        >
+          <Users className="size-4" aria-hidden="true" />
+        </Link>
 
         {/* Breadcrumb */}
         <nav

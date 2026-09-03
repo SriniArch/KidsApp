@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useId, useState } from "react"
+import Link from "next/link"
 import { KeyRound, X } from "lucide-react"
 import type { useProgress } from "@/hooks/use-progress"
 
@@ -182,7 +183,8 @@ export function BuddyAccountDialog({ open, onClose, progress }: BuddyAccountDial
                 I already have a code
               </label>
               <p className="text-sm text-muted-foreground">
-                Magi and Yazhini can type their name. Other codes look like PANDA-847.
+                Magi and Yazhini can type their name. Other codes look like PANDA-847. Use this
+                code makes this phone that child.
               </p>
               <input
                 id="buddy-code"
@@ -204,6 +206,18 @@ export function BuddyAccountDialog({ open, onClose, progress }: BuddyAccountDial
             </form>
           </div>
         )}
+
+        <p className="mt-5 text-sm text-muted-foreground">
+          Grown-ups:{" "}
+          <Link
+            href="/family"
+            className="font-bold text-primary underline-offset-2 hover:underline"
+            onClick={onClose}
+          >
+            Family
+          </Link>{" "}
+          lets you view Magi, Yazhini, or any code without switching the kid on this phone.
+        </p>
 
         {error && (
           <p className="mt-4 rounded-2xl bg-destructive/10 px-3 py-2 text-sm font-semibold text-destructive" role="alert">

@@ -37,6 +37,7 @@ export async function GET(request: Request) {
     code: account.code,
     name: account.name,
     progress: account.progress,
+    updatedAt: account.updatedAt,
   })
 }
 
@@ -55,6 +56,7 @@ export async function POST(request: Request) {
       code: account.code,
       name: account.name,
       progress: account.progress,
+      updatedAt: account.updatedAt,
     })
   } catch {
     return jsonError("Could not make a buddy code. Try again.", 500)
@@ -81,5 +83,6 @@ export async function PUT(request: Request) {
     code: account.code,
     name: account.name,
     progress: account.progress,
+    updatedAt: account.updatedAt,
   })
 }

@@ -15,6 +15,7 @@ When you ship something, move it from Pending or Desired to Implemented. Keep th
 - [x] Multi-device progress via a buddy code (no email/password): create or enter a code in the header; `/api/progress` stores and merges scores
 - [x] Kid-oriented UI: fonts, subject colors/icons
 - [x] Daily challenge UI: seeded 10-question mix per grade (`buildDailyQuiz` in `lib/quiz.ts`), home card, play/retry, best score stored with buddy progress
+- [x] Parent/teacher family view (`/family`): lookup-only GET by buddy code, Magi/Yazhini roster, daily-by-day best scores and topic completion; no PIN. Class roster and signed-in accounts stay later.
 
 ### Content
 
@@ -34,7 +35,7 @@ Each topic has a short lesson and five base questions in `lib/curriculum.ts`.
 
 ## Pending
 
-Started in code or implied by the current architecture, not finished. -
+Started in code or implied by the current architecture, not finished.
 
 ## Desired
 
@@ -44,7 +45,6 @@ Not started. Not a commitment
 - [ ] Review quiz of questions the child missed
 - [ ] Stars, streaks, or other light rewards
 - [ ] Read-aloud for lessons and questions
-- [ ] Parent or teacher view of progress
 - [ ] PWA / offline use
 - [ ] Signed-in accounts
 - [ ] Additional languages
